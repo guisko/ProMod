@@ -161,8 +161,9 @@ stock GetClientBySteamID(const String:steamID[]) {
 	
 	for (new client = 1; client < MaxClients+1; client++) {
 		if (!IsClientInGame(client)) continue;
-		GetClientAuthString(client, tempSteamID, STEAMID_SIZE);
-		
+		char sSteamid[32];
+		GetClientAuthId(client, AuthId_Steam2, sSteamid, sizeof(sSteamid));
+		// update GetClientAuthString to GetClientAuthId
 		if (StrEqual(steamID, tempSteamID)) {
 			return client;
 		}
@@ -220,7 +221,9 @@ ProcessPlayerLerp(client) {
 	}
 	// Get steamid and index
 	decl String:steamID[STEAMID_SIZE];
-	GetClientAuthString(client, steamID, STEAMID_SIZE);
+	char sSteamid[32];
+	GetClientAuthId(client, AuthId_Steam2, sSteamid, sizeof(sSteamid));
+	// update GetClientAuthString to GetClientAuthId
 	new index = FindStringInArray(arrayLerps, steamID);
 	
 	if (index != -1) {
@@ -284,8 +287,9 @@ Float:GetLerpTime(client) {
 	return maximum(flLerpAmount, flLerpRatio / updateRate);
 }
 
-Float:clamp(Float:in, Float:low, Float:high) {
-	return in > high ? high : (in < low ? low : in);
+Float:clamp(Float:inn, Float:low, Float:high) {
+	return inn > high ? high : (inn < low ? low : inn);
+	//update 'in' to 'inn' because in' is a newly reserved keyword that may be used in the future
 }
 
 Float:maximum(Float:a, Float:b) {
